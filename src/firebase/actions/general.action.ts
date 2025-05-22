@@ -1,7 +1,6 @@
 "use server";
 
 import { db } from "../admin";
-
 interface Interview {
   id: string;
   role: string;
