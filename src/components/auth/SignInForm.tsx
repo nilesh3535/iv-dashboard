@@ -4,11 +4,91 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import {  EyeCloseIcon, EyeIcon } from "@/icons";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import Lottie, { LottieComponentProps } from "lottie-react";
+import { toast } from "sonner";
+import { signinUser } from "@/firebase/actions/general.action";
+import { useRouter } from "next/navigation";
 export default function SignInForm() {
-  const [showPassword, setShowPassword] = useState(false);
+ const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+ const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+ const [animationData, setAnimationData] = useState<LottieComponentProps["animationData"] | null>(null);
+ 
+   useEffect(() => {
+     const loadAnimation = async () => {
+       const res = await fetch("/images/loader.json");
+       const json = await res.json();
+       setAnimationData(json);
+     };
+ 
+     loadAnimation();
+
+},[]) 
+
+if (isLoading || !animationData) {
+    return (
+      <div className="fixed inset-0 z-50 bg-[#171950] dark:bg-white/5 text-white">
+      <div>
+        <div className="relative flex lg:flex-row w-full h-screen justify-center flex-col sm:p-0">
+          <div className="lg:w-1/2 w-full h-full lg:grid items-center hidden">
+            <div className="relative items-center justify-center flex z-1 flex-col gap-4">
+              <Lottie animationData={animationData} loop autoplay className="w-48 h-48" />
+            </div>
+          </div>
+          <div className="lg:hidden flex justify-center items-center w-full h-full bg-[#171950] dark:bg-white/5">
+            <Lottie animationData={animationData} loop autoplay className="w-48 h-48" />
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    );
+  }
+ async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+
+  const formData = new FormData(event.currentTarget);
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+      if(email==""||email.length==0 || password==""||password.length==0){
+       toast.error("Please enter login credentials",{
+                 position:"bottom-center",
+                 duration:2000,
+                 style:{background:"#ff3f3f",
+                 }
+               });
+        return;
+      }
+   setIsLoading(true)
+  
+    const result = await signinUser({ email, password });
+  
+      if (result.success) {
+        console.log("success")
+        // Set session and admin status in localStorage
+       
+
+        console.log("Login successful!");
+         toast.success("Login successful!",{
+          duration:2000,
+                    style:{background:"#309f60",color:"white"}
+                  });
+        router.push("/");
+        // Redirect or show success message
+      } else {
+       setIsLoading(false)
+        console.log("Invalid credentials. Please try again.")
+         toast.error("Invalid credentials. Please try again.",{
+                 position:"bottom-center",
+                 duration:2000,
+                 style:{background:"#ff3f3f",
+                 }
+               });
+      }
+    }
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
@@ -31,7 +111,7 @@ export default function SignInForm() {
           </div>
           <div>
             
-            <form >
+           <form onSubmit={onSubmit}>
               <div className="space-y-6">
                 <div>
                   <Label>
@@ -48,6 +128,7 @@ export default function SignInForm() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       name="password"
+                      
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
