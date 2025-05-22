@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.className} dark:bg-gray-900`}>
         <ThemeProvider>
-          <Toaster expand={true}/>
+          <Toaster expand={true} closeButton />
           <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
       </body>

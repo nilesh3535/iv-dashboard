@@ -1,0 +1,97 @@
+"use client";
+
+import { useSidebar } from "@/context/SidebarContext";
+import AppHeader from "@/layout/AppHeader";
+import AppSidebar from "@/layout/AppSidebar";
+import Backdrop from "@/layout/Backdrop";
+import React, { useEffect, useState } from "react";
+import Lottie, { LottieComponentProps } from "lottie-react";
+import { useRouter } from "next/navigation";
+import { getCurrentAdmin } from "@/firebase/actions/general.action";
+export default function AdminLayoutClientWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(true);
+  const [animationData, setAnimationData] = useState<
+    LottieComponentProps["animationData"] | null
+  >(null);
+useEffect(() => {
+  const loadEverything = async () => {
+    // Load animation first
+    const res = await fetch("/images/loader.json");
+    const json = await res.json();
+    setAnimationData(json);
+
+    // Wait for 3 seconds before checking authentication
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    // Check auth (must be awaited)
+   const admin = await getCurrentAdmin();
+  console.log("admin",admin)
+    if (!admin) {
+      router.push("/signin");
+    } else {
+      setLoading(false);
+    }
+  };
+
+  loadEverything();
+}, [router]);
+
+
+  if (loading || !animationData) {
+    return (
+      <div className="fixed inset-0 z-50 bg-[#171950] dark:bg-white/5 text-white">
+        <div className="relative flex lg:flex-row w-full h-screen justify-center flex-col sm:p-0">
+          <div className="lg:w-1/2 w-full h-full lg:grid items-center hidden">
+            <div className="relative items-center justify-center flex z-1 flex-col gap-4">
+              <Lottie
+                animationData={animationData}
+                loop
+                autoplay
+                className="w-48 h-48"
+              />
+            </div>
+          </div>
+          <div className="lg:hidden flex justify-center items-center w-full h-full bg-[#171950] dark:bg-white/5">
+            <Lottie
+              animationData={animationData}
+              loop
+              autoplay
+              className="w-48 h-48"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Dynamic class for main content margin based on sidebar state
+  const mainContentMargin = isMobileOpen
+    ? "ml-0"
+    : isExpanded || isHovered
+    ? "lg:ml-[290px]"
+    : "lg:ml-[90px]";
+
+  return (
+    <div className="min-h-screen xl:flex">
+      {/* Sidebar and Backdrop */}
+      <AppSidebar />
+      <Backdrop />
+      {/* Main Content Area */}
+      <div
+        className={`flex-1 transition-all duration-300 ease-in-out ${mainContentMargin}`}
+      >
+        {/* Header */}
+        <AppHeader />
+        {/* Page Content */}
+        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
+      </div>
+    </div>
+  );
+}
