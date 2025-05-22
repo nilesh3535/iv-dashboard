@@ -2,15 +2,87 @@
 
 import { db } from "../admin";
 
-export async function getAllUsers(): Promise<User[] | null> {
+interface Interview {
+  id: string;
+  role: string;
+  level: string;
+  questions: string[];
+  techstack: string[];
+  createdAt: string;
+  userId: string;
+  type: string;
+  coverImage?: string;
+  finalized: boolean;
+  candidates?: string[];  // <-- add here
+}
+
+
+// Add photoURL to your existing User interface
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  photoURL?: string;
+  emailVerified?: boolean;
+  packs?:string;
+  authProvider: string;
+  createdAt: string;
+}
+
+
+
+interface SignInUser {
+  email: string;
+  idToken?: string;
+  password: string;
+}
+
+interface OrderProps{
+  id?: string;
+   paymentid: string;//
+  orderid:string;
+  type:string;
+  amount: string;//900 
+  packs: string;//5
+  paymentType:string;
+  oldBalance:string;
+  remaining:string;
+  userId:string; //userid
+  paymentDate: string;
+ packType:string
+  
+}
+interface CheckPlanActiveParams {
+  packid: string;
+  name: string;
+  flag: boolean;
+}
+
+interface Packs{
+  packid?:string;
+  id:string;
+  name:string;
+  packs:string;
+  amount:string;
+  offer:string;
+  desc:string;
+  flag:boolean
+  createdAt:string;
+  updatedAt:string
+
+}
+interface PacksQuery {
+  name: string;
+  flag: boolean;
+}
+
+export async function getAllUsers(): Promise<User[]> {
   try {
-    const usersSnapshot = await db
-      .collection("users") // Replace with your Firestore collection name for users
-      .get();
+    const usersSnapshot = await db.collection("users").get();
 
     if (usersSnapshot.empty) {
       console.log("No users found");
-      return null;
+      return []; // Return an empty array instead of null
     }
 
     return usersSnapshot.docs.map((doc) => ({
@@ -19,7 +91,7 @@ export async function getAllUsers(): Promise<User[] | null> {
     })) as User[];
   } catch (error) {
     console.error("Error fetching users:", error);
-    return null;
+    return []; // Also return empty array on error
   }
 }
 export async function getAllInterviews(): Promise<Interview[] | null> {
@@ -87,17 +159,8 @@ export async function getFeedbackByUserId(userId: string): Promise<Interview[] |
   }
 }
 
-interface UserHere {
-  id: string;
-  name: string;
-  email: string;
-  photoURL?: string;
-  emailVerified?: boolean;
-  packs?:string
-}
 
-
-export async function getOrdersWithUserInfo(): Promise<any[] | null> {
+export async function getOrdersWithUserInfo(): Promise<OrderProps[] | null> {
   try {
     const ordersSnapshot = await db
       .collection("orders")
@@ -111,10 +174,9 @@ export async function getOrdersWithUserInfo(): Promise<any[] | null> {
 
     const orders = ordersSnapshot.docs.map((doc) => ({
       id: doc.id,
-      ...doc.data(),
-    }));
+      ...(doc.data() as Omit<OrderProps, "id">),
+    })) as OrderProps[];
 
-    // Fetch user data for each order
     const enrichedOrders = await Promise.all(
       orders.map(async (order) => {
         const userRef = db.collection("users").doc(order.userId);
@@ -134,6 +196,7 @@ export async function getOrdersWithUserInfo(): Promise<any[] | null> {
     return null;
   }
 }
+
 
 export async function getAllPacks(): Promise<Packs[]> {
   const snapshot = await db.collection("packs")
@@ -247,7 +310,7 @@ export async function updatePlanDetails({
 }
 
 
-export async function checkPlanActive(params: Packs) {
+export async function checkPlanActive(params: CheckPlanActiveParams) {
   const {packid, name, flag } = params;
 
   try {
@@ -289,7 +352,7 @@ export async function checkPlanActive(params: Packs) {
 }
 
 
-export async function checkPlanExists(params: Packs) {
+export async function checkPlanExists(params: PacksQuery) {
   const { name, flag } = params;
 
   try {
