@@ -68,7 +68,7 @@ if (isLoading || !animationData) {
   
       if (result.success) {
         console.log("success")
-        // Set session and admin status in localStorage
+        // Set session and admin status in cookie
        
 
         console.log("Login successful!");
