@@ -41,7 +41,7 @@ useEffect(() => {
   };
 
   loadEverything();
-}, [router]);
+}, [router,admin]);
 
 
   if (loading || !animationData) {

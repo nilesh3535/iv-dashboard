@@ -35,7 +35,7 @@ export default function AuthRedirectWrapper({
    };
  
    loadEverything();
- }, [router]);
+ }, [router,admin]);
 
    if (loading || !animationData) {
     return (
