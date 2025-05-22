@@ -26,7 +26,7 @@ export default function AuthRedirectWrapper({
  
      // Check auth (must be awaited)
     const admin = await getCurrentAdmin();
-   console.log("admin",admin)
+  
      if (!admin) {
      
         setLoading(false);

@@ -32,7 +32,7 @@ useEffect(() => {
 
     // Check auth (must be awaited)
    const admin = await getCurrentAdmin();
-  console.log("admin",admin)
+ 
     if (!admin) {
       router.push("/signin");
        setLoading(false);
