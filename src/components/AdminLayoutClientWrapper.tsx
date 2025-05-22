@@ -35,7 +35,9 @@ useEffect(() => {
   console.log("admin",admin)
     if (!admin) {
       router.push("/signin");
+       setLoading(false);
     } else {
+        router.push("/");
       setLoading(false);
     }
   };
