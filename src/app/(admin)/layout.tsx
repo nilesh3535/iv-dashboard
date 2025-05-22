@@ -1,4 +1,5 @@
 import AdminLayoutClientWrapper from "@/components/AdminLayoutClientWrapper";
+import { getCurrentAdmin } from "@/firebase/actions/general.action";
 
 
 export default async function AdminLayout({
@@ -7,7 +8,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
  
-
+ const admin = await getCurrentAdmin(); // Server-safe call
   // Render your client layout wrapper that handles UI and loading
-  return <AdminLayoutClientWrapper>{children}</AdminLayoutClientWrapper>;
+  return <AdminLayoutClientWrapper admin={admin}>{children}</AdminLayoutClientWrapper>;
 }

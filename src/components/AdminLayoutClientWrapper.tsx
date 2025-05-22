@@ -7,11 +7,12 @@ import Backdrop from "@/layout/Backdrop";
 import React, { useEffect, useState } from "react";
 import Lottie, { LottieComponentProps } from "lottie-react";
 import { useRouter } from "next/navigation";
-import { getCurrentAdmin } from "@/firebase/actions/general.action";
 export default function AdminLayoutClientWrapper({
   children,
+  admin,
 }: {
   children: React.ReactNode;
+  admin: object | null;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
   const router = useRouter();
@@ -30,9 +31,6 @@ useEffect(() => {
     // Wait for 3 seconds before checking authentication
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    // Check auth (must be awaited)
-   const admin = await getCurrentAdmin();
- 
     if (!admin) {
       router.push("/signin");
        setLoading(false);

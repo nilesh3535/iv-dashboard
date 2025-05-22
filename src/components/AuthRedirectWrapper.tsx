@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getCurrentAdmin } from "@/firebase/actions/general.action";
 import Lottie, { LottieComponentProps } from "lottie-react";
 export default function AuthRedirectWrapper({
-  children,
-}: {
-  children: React.ReactNode;
+   children,
+    admin,
+  }: {
+    children: React.ReactNode;
+    admin: object | null;
 }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -24,9 +25,6 @@ export default function AuthRedirectWrapper({
      // Wait for 3 seconds before checking authentication
      await new Promise((resolve) => setTimeout(resolve, 1000));
  
-     // Check auth (must be awaited)
-    const admin = await getCurrentAdmin();
-  
      if (!admin) {
      
         setLoading(false);

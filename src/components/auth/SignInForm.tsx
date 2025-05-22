@@ -67,11 +67,6 @@ if (isLoading || !animationData) {
     const result = await signinUser({ email, password });
   
       if (result.success) {
-        console.log("success")
-        // Set session and admin status in cookie
-       
-
-        console.log("Login successful!");
          toast.success("Login successful!",{
           duration:2000,
                     style:{background:"#309f60",color:"white"}
@@ -80,7 +75,6 @@ if (isLoading || !animationData) {
         // Redirect or show success message
       } else {
        setIsLoading(false)
-        console.log("Invalid credentials. Please try again.")
          toast.error("Invalid credentials. Please try again.",{
                  position:"bottom-center",
                  duration:2000,
