@@ -36,7 +36,7 @@ interface Props {
   loading: boolean;
 }
 
-export default function TablePacks({ fdata, total, refetch, loading }: Props) {
+export default function TablePacks({ fdata, refetch, loading }: Props) {
   const [packid,setPackid]=useState("");
   const [name, setName] = useState(""); // Name of the pack
   const [packs, setPacks] = useState(0); // Number of packs

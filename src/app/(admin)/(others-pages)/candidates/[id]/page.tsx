@@ -54,7 +54,7 @@ export default function CandidateInfo() {
     
 
 
-
+     console.log(available)
       const [isFullscreenModalOpen, setIsOpen] = useState(false);
         
        const openFullscreenModal = (
