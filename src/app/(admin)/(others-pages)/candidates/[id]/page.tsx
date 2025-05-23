@@ -38,7 +38,14 @@ export interface InterviewData {
       attemptdate:string;
       comment:string
   }
-  
+  interface FeedbackData {
+  areasForImprovement: string[];
+  categoryScores: { name: string; score: number; comment?: string }[];
+  createdAt: string;
+  finalAssessment: string;
+  strengths: string[];
+  totalScore: number;
+}
 export default function CandidateInfo() {
   
  
@@ -121,13 +128,13 @@ export default function CandidateInfo() {
         alldata.map(async (data) => {
           try {
             const feedback = await getFeedbackByInterviews(data.id, data.userId);
-            const safeFeedback = feedback ?? {};
+           const safeFeedback = (feedback ?? {}) as Partial<FeedbackData>;
             const isAvailable = feedback && Object.keys(feedback).length > 0;
 
             return {
               ...data,
               interviewCount: alldata.length,
-              areasForImp: safeFeedback.areasForImprovement || [],
+             areasForImp: safeFeedback?.areasForImprovement || [],
               categoryScores: safeFeedback.categoryScores || [],
               attemptdate: safeFeedback.createdAt || null,
               finalAssessment: safeFeedback.finalAssessment || "",
