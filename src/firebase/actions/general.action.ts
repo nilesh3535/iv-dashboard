@@ -499,3 +499,38 @@ export async function updateAdminProfile({
     return { success: false, error };
   }
 }
+
+export async function updateAddress({
+       userId,
+      address,
+     city,
+    country,
+    state,
+    zip
+
+}: {
+  userId: string;
+ address: string;
+  city:string;
+  country: string;
+  state: string;
+  zip:string;
+
+}) {
+  try {
+    const userRef = db.collection("admin").doc(userId);
+
+    await userRef.update({
+          address:address,
+          city:city,
+          country:country,
+          state:state,
+          zip:zip
+    });
+
+    return { success: true, message: "Information updated successfully!" };
+  } catch (error) {
+    console.error("Error updatingInformation details:", error);
+    return { success: false, error };
+  }
+}
