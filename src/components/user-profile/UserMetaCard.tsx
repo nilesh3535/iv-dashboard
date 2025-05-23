@@ -3,16 +3,38 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 
+interface Admin {
+  photo: string;
+    name: string;
+  companyName:string;
+  email: string;
+  phone:string;
+  bio:string;
+  city:string;
+  country:string;
+  instagram:string;
+  linkedln:string;
+  twitter:string;
+  facebook:string;
 
+}
 export default function UserMetaCard() {
-const user = JSON.parse(localStorage.getItem("user") || "{}");
+const [user, setUser] = useState<Admin | null>(null);
+ const loadEverything = async () => {
+         
+         const adminRes = await fetch("/api/get-current-admin");
+         const { admin } = await adminRes.json();
+        
+        setUser(admin)      
+        setImgSrc(admin.photo)
+       };
+   useEffect(() => {
+      
+     
+       loadEverything();
+     }, []);
 const [imgSrc, setImgSrc] = useState("/images/user/admin.jpg");
 
-useEffect(() => {
-  if (user.photo) {
-    setImgSrc(user.photo);
-  }
-}, [user.photo]);
   
   const handleOpenLink = (link: string | null | undefined, media: string)=> {
     if (link) {
@@ -43,15 +65,15 @@ useEffect(() => {
             </div>
             <div className="order-3 xl:order-2">
               <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
-                {user.name}
+                {user?.name}
               </h4>
               <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {user.companyName}
+                  {user?.companyName}
                 </p>
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                 {user.city}, {user.country}
+                 {user?.city}, {user?.country}
                 </p>
               </div>
             </div>
