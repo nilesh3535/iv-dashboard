@@ -26,11 +26,12 @@ export default function AuthRedirectWrapper({
  
      if (!admin) {
        router.push("/signin");
+        setLoading(false);
      } else {
        router.push("/");
      }
  
-     setLoading(false);
+    
    };
  
    loadEverything();

@@ -35,9 +35,10 @@ useEffect(() => {
       router.push("/signin");
     } else {
       router.push("/");
+       setLoading(false);
     }
 
-    setLoading(false);
+   
   };
 
   loadEverything();
