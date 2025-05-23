@@ -9,10 +9,8 @@ import Lottie, { LottieComponentProps } from "lottie-react";
 import { useRouter } from "next/navigation";
 export default function AdminLayoutClientWrapper({
   children,
-  admin,
 }: {
   children: React.ReactNode;
-  admin: object | null;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
   const router = useRouter();
@@ -21,27 +19,29 @@ export default function AdminLayoutClientWrapper({
   const [animationData, setAnimationData] = useState<
     LottieComponentProps["animationData"] | null
   >(null);
+  
 useEffect(() => {
   const loadEverything = async () => {
-    // Load animation first
     const res = await fetch("/images/loader.json");
     const json = await res.json();
     setAnimationData(json);
 
-    // Wait for 3 seconds before checking authentication
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
+    const adminRes = await fetch("/api/get-current-admin");
+    const { admin } = await adminRes.json();
+     
     if (!admin) {
       router.push("/signin");
-       setLoading(false);
     } else {
-        router.push("/");
-      setLoading(false);
+      router.push("/");
     }
+
+    setLoading(false);
   };
 
   loadEverything();
-}, [router,admin]);
+}, [router]);
 
 
   if (loading || !animationData) {

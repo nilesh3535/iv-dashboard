@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getCurrentAdmin } from "@/firebase/actions/general.action";
 import Lottie, { LottieComponentProps } from "lottie-react";
 export default function AuthRedirectWrapper({
   children,
@@ -16,24 +15,22 @@ export default function AuthRedirectWrapper({
   >(null);
  useEffect(() => {
    const loadEverything = async () => {
-     // Load animation first
      const res = await fetch("/images/loader.json");
      const json = await res.json();
      setAnimationData(json);
  
-     // Wait for 3 seconds before checking authentication
      await new Promise((resolve) => setTimeout(resolve, 1000));
  
-     // Check auth (must be awaited)
-    const admin = await getCurrentAdmin();
-  
+     const adminRes = await fetch("/api/get-current-admin");
+     const { admin } = await adminRes.json();
+ 
      if (!admin) {
-     
-        setLoading(false);
+       router.push("/signin");
      } else {
-         router.push("/");
-      
+       router.push("/");
      }
+ 
+     setLoading(false);
    };
  
    loadEverything();
