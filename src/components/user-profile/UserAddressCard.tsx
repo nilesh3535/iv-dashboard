@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
@@ -7,59 +7,36 @@ import Label from "../form/Label";
 import { toast } from "sonner";
 import { LoaderIcon } from "lucide-react";
 import { updateAddress } from "@/firebase/actions/general.action";
-interface Admin {
-  address: string;
-  city:string;
-  country: string;
-  state: string;
-  zip:string;
+import { useAdmin } from "@/context/AdminContext";
 
-}
+
 export default function UserAddressCard() {
- const [user, setUser] = useState<Admin | null>(null);
- const loadEverything = async () => {
-         
-         const adminRes = await fetch("/api/get-current-admin");
-         const { admin } = await adminRes.json();
-         setUserId(admin.id)
-        setAddress(admin.address)
-        setCity(admin.city)
-        setCountry(admin.country)
-        setState(admin.state)
-        setZip(admin.zip)
-        setUser(admin)      
-       };
-   useEffect(() => {
-      
-     
-       loadEverything();
-     }, []);
-   const [userid, setUserId] = React.useState("");
+  const { admin, loading, refreshAdmin } = useAdmin();
+  const [isOpen, setIsOpen] = useState(false);
+  const [eerr, setEerr] = useState(false);
+
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zip, setZip] = useState("");
   const [country, setCountry] = useState("");
- const [isOpen,setIsOpen] = React.useState(false);
-  const openModal= () => {
+ const openModal = () => {
     setIsOpen(true);
-     setAddress(user?.address || "");
-      setCity(user?.city || "");
-      setState(user?.state || "");
-      setZip(user?.zip || "");
-      setCountry(user?.country || "");
+    resetForm();
+    setEerr(false);
+  };
+   const resetForm = () => {
+    setAddress(admin?.address || "");
+    setCity(admin?.city || "");
+    setState(admin?.state || "");
+    setZip(admin?.zip || "");
+    setCountry(admin?.country || "");
 
-  }
-  const closeModal= () => {
-      setIsOpen(false);
-      setAddress(user?.address || "");
-      setCity(user?.city || "");
-      setState(user?.state || "");
-      setZip(user?.zip || "");
-      setCountry(user?.country || "");
-  }
-
-   const [eerr,setEerr]=useState(false);
+   }
+     const closeModal = () => {
+    setIsOpen(false);
+    setEerr(false);
+  };
   const handleSave = async() => {
      setEerr(false);
 
@@ -88,7 +65,7 @@ export default function UserAddressCard() {
    // Update the 
        try {
          const result = await updateAddress({
-            userId: userid,
+            userId: admin?.id || "",
             address:address,
             city:city,
             country:country,
@@ -97,12 +74,11 @@ export default function UserAddressCard() {
          });
          
          if (result.success) {
-           toast.success("Information updated successfully!",{
-                  style:{background:"#309f60",color:"white"}
-                });
-          loadEverything();
-          
-           closeModal();
+           await refreshAdmin(); // Refresh all components
+                  toast.success("Information updated successfully!", {
+                    style: { background: "#309f60", color: "white" }
+                  });
+                  closeModal();
          } else {
            toast.error("Failed to update Information..");
          }
@@ -110,8 +86,24 @@ export default function UserAddressCard() {
          console.error("Failed to update Information:", error);
          toast.error("Failed to update Information..");
        }
- 
   };
+    if (loading) {
+    return (
+      <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-300 rounded w-48 mb-6"></div>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="space-y-2">
+                <div className="h-3 bg-gray-300 rounded w-16"></div>
+                <div className="h-4 bg-gray-300 rounded w-32"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -125,7 +117,7 @@ export default function UserAddressCard() {
               Address
                 </p>
             <p className="text-sm font-medium mb-5 text-gray-800 dark:text-white/90">
-                 {user?.address || "-"}
+                 {admin?.address || "-"}
                 </p>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
               
@@ -134,7 +126,7 @@ export default function UserAddressCard() {
                   Country
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                 {user?.country || "-"}
+                 {admin?.country || "-"}
                 </p>
               </div>
 
@@ -143,7 +135,7 @@ export default function UserAddressCard() {
                   City
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  {user?.city || "-"}
+                  {admin?.city || "-"}
                 </p>
               </div>
 
@@ -152,7 +144,7 @@ export default function UserAddressCard() {
                  State
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  {user?.state|| "-"}
+                  {admin?.state|| "-"}
                 </p>
               </div>
 
@@ -161,7 +153,7 @@ export default function UserAddressCard() {
                   ZIP Code
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  {user?.zip|| "-"}
+                  {admin?.zip|| "-"}
                 </p>
               </div>
             </div>
