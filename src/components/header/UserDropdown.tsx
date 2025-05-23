@@ -1,13 +1,23 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 
+import { useRouter } from "next/navigation";
+import { LoaderIcon } from "lucide-react";
+import { toast } from "sonner";
+import { adminLogout } from "@/firebase/actions/general.action";
+interface Admin {
+  name: string;
+  email: string;
+  photo: string;
+}
 export default function UserDropdown() {
+   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-
+ const [user, setUser] = useState<Admin | null>(null);
 function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.stopPropagation();
   setIsOpen((prev) => !prev);
@@ -15,6 +25,39 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
   function closeDropdown() {
     setIsOpen(false);
+  }
+
+   useEffect(() => {
+     const loadEverything = async () => {
+       
+       const adminRes = await fetch("/api/get-current-admin");
+       const { admin } = await adminRes.json();
+      setUser(admin)      
+     };
+   
+     loadEverything();
+   }, [router]);
+  function handleLogout() {
+     toast("Signing out of your account, please wait...", {
+              style: {background:"#ec614b"},
+              duration: 2000,
+              position:"bottom-center",
+              icon: <LoaderIcon />,
+              id: "feedback-toast",
+            });
+    
+            setTimeout(async() => {
+              // Remove items from cookie
+              await adminLogout();
+              console.log("Logged out successfully");
+    
+              // Redirect to home page
+              toast.success("You have successfully signed out!", {
+                style: { background: "#309f60", color: "white" },
+              });
+    
+              router.push("/signin");
+            }, 3000);
   }
   return (
     <div className="relative">
@@ -26,12 +69,12 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
           <Image
             width={44}
             height={44}
-            src="/images/user/owner.jpg"
+            src={user?.photo||"/images/user/admin.jpg"}
             alt="User"
           />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">Musharof</span>
+        <span className="block mr-1 font-medium text-theme-sm">{user?.name}</span>
 
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
@@ -60,15 +103,15 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Musharof Chowdhury
+            {user?.name}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            randomuser@pimjo.com
+          {user?.email}
           </span>
         </div>
 
         <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-gray-200 dark:border-gray-800">
-          <li>
+          {/* <li>
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
@@ -92,7 +135,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
               </svg>
               Edit profile
             </DropdownItem>
-          </li>
+          </li> */}
           <li>
             <DropdownItem
               onItemClick={closeDropdown}
@@ -122,7 +165,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
-              href="/profile"
+              href="/"
               className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
               <svg
@@ -143,12 +186,12 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
               Support
             </DropdownItem>
           </li>
-        </ul>
-        <Link
-          href="/signin"
-          className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-        >
-          <svg
+          <li>
+            <DropdownItem
+              onItemClick={handleLogout} // Call handleLogout to log out
+              className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+            >
+              <svg
             className="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
             width="24"
             height="24"
@@ -164,7 +207,10 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             />
           </svg>
           Sign out
-        </Link>
+            </DropdownItem>
+          </li>
+        </ul>
+    
       </Dropdown>
     </div>
   );

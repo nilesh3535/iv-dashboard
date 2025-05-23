@@ -83,21 +83,22 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link href="/" className="lg:hidden">
+          <Link href="/" className="lg:hidden flex flex-row justify-center items-center gap-2">
             <Image
-              width={154}
+              width={40}
               height={32}
               className="dark:hidden"
-              src="./images/logo/logo.svg"
+            src="/images/ai-avatar-512.png"
               alt="Logo"
             />
             <Image
-              width={154}
+              width={40}
               height={32}
               className="hidden dark:block"
-              src="./images/logo/logo-dark.svg"
+             src="/images/ai-avatar-512.png"
               alt="Logo"
             />
+            <h3 className=" dark:text-blue-300 text-blue-900 font-semibold">AI Interviewer</h3>
           </Link>
 
           <button
@@ -120,7 +121,7 @@ const AppHeader: React.FC = () => {
             </svg>
           </button>
 
-          <div className="hidden lg:block">
+          {/* <div className="hidden lg:block">
             <form>
               <div className="relative">
                 <span className="absolute -translate-y-1/2 left-4 top-1/2 pointer-events-none">
@@ -153,7 +154,7 @@ const AppHeader: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
+          </div> */}
         </div>
         <div
           className={`${
