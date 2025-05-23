@@ -9,8 +9,11 @@ import dynamic from "next/dynamic";
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
+type StatisticsChartProps = {
+  monthlyEarnings: number[];
+};
 
-export default function StatisticsChart() {
+export default function StatisticsChart({ monthlyEarnings }: StatisticsChartProps) {
   const options: ApexOptions = {
     legend: {
       show: false, // Hide legend
@@ -112,11 +115,11 @@ export default function StatisticsChart() {
   const series = [
     {
       name: "Sales",
-      data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
+      data: monthlyEarnings,
     },
     {
       name: "Revenue",
-      data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
+      data: [0,0,0,0,0,0,0,0,0,0,0,0],
     },
   ];
   return (

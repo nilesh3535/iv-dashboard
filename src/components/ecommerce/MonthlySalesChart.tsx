@@ -1,17 +1,23 @@
-"use client";
+"use client"
 import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import { MoreDotIcon } from "@/icons";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { useState } from "react";
+import {  useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
+
 
 // Dynamically import the ReactApexChart component
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
+interface MonthlySalesChartProps {
+  monthlyEarnings: number[];
+}
 
-export default function MonthlySalesChart() {
+export default function MonthlySalesChart({ monthlyEarnings }: MonthlySalesChartProps) {
+
+ 
   const options: ApexOptions = {
     colors: ["#465fff"],
     chart: {
@@ -94,7 +100,7 @@ export default function MonthlySalesChart() {
   const series = [
     {
       name: "Sales",
-      data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
+      data: monthlyEarnings,
     },
   ];
   const [isOpen, setIsOpen] = useState(false);

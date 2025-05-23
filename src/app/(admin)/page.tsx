@@ -1,7 +1,9 @@
 'use client';
 import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React, { useEffect, useState } from "react";
-
+import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
+import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
+import StatisticsChart from "@/components/ecommerce/StatisticsChart";
 
 import { getAllUsers, getOrdersWithUserInfo } from "../../firebase/actions/general.action";
 import moment from "moment";
@@ -17,10 +19,10 @@ export default function Ecommerce() {
   // const [ivCount, setIVCount] = useState<number>(0);
   
   const [orderCount, setOrderCount] = useState<number>(0);
-  // const [todayEarn,setTodayEarn]=useState<number>(0);
-  // const [allEarn,setAllEarn]=useState<number>(0);
+  const [todayEarn,setTodayEarn]=useState<number>(0);
+  const [allEarn,setAllEarn]=useState<number>(0);
  //current year 
-  // const [monthlyEarnings, setMonthlyEarnings] = useState<number[]>(Array(12).fill(0));
+  const [monthlyEarnings, setMonthlyEarnings] = useState<number[]>(Array(12).fill(0));
 
   useEffect(() => {
     const loadAnimation = async () => {
@@ -52,18 +54,18 @@ const currentMonthOrders = orders?.filter(user =>
       const cmoCount=currentMonthOrders?.length;
 setCurrentMonthOrdersCount(cmoCount||0)
       //
-      // const today = moment().format("DD/MM/YYYY");
-      // const todaysOrders = orders?.filter(order => 
-      //   moment(order.paymentDate).format("DD/MM/YYYY") == today
-      // );
-    //   const totalAmount = todaysOrders?.reduce((sum, order) => {
-    //   return sum + Number(order.amount);
-    // }, 0);
-    // setTodayEarn(totalAmount||0)
-    //  const totalallAmount = orders?.reduce((sum, order) => {
-    //   return sum + Number(order.amount);
-    // }, 0);
-    // setAllEarn(totalallAmount||0)
+      const today = moment().format("DD/MM/YYYY");
+      const todaysOrders = orders?.filter(order => 
+        moment(order.paymentDate).format("DD/MM/YYYY") == today
+      );
+      const totalAmount = todaysOrders?.reduce((sum, order) => {
+      return sum + Number(order.amount);
+    }, 0);
+    setTodayEarn(totalAmount||0)
+     const totalallAmount = orders?.reduce((sum, order) => {
+      return sum + Number(order.amount);
+    }, 0);
+    setAllEarn(totalallAmount||0)
 
     //monthly
      const monthlyTotals = Array(12).fill(0);
@@ -76,7 +78,7 @@ setCurrentMonthOrdersCount(cmoCount||0)
         monthlyTotals[monthIndex] += Number(order.amount);
       }
     });
-    //  setMonthlyEarnings(monthlyTotals);
+     setMonthlyEarnings(monthlyTotals);
      setIsLoading(false);
     };
     fetchUsers();
@@ -106,15 +108,15 @@ setCurrentMonthOrdersCount(cmoCount||0)
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <EcommerceMetrics candidatesCount={candidatesCount}  orderCount={orderCount} currentMonthOrdersCount={currentMonthOrdersCount} currentMonthCandidatesCount={currentMonthCandidatesCount} />
 
-        {/* <MonthlySalesChart monthlyEarnings={monthlyEarnings} /> */}
+        <MonthlySalesChart monthlyEarnings={monthlyEarnings} />
       </div>
 
       <div className="col-span-12 xl:col-span-5">
-        {/* <MonthlyTarget todayEarn={todayEarn} allEarn={allEarn}  /> */}
+        <MonthlyTarget todayEarn={todayEarn} allEarn={allEarn}  />
       </div>
 
       <div className="col-span-12">
-        {/* <StatisticsChart monthlyEarnings={monthlyEarnings} /> */}
+        <StatisticsChart monthlyEarnings={monthlyEarnings} />
       </div>
 
       
