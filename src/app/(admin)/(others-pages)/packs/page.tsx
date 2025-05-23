@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 
-import { getAllPacks, getOrdersWithUserInfo } from '@/firebase/actions/general.action';
+import { getAllPacks } from '@/firebase/actions/general.action';
 
 
 import TablePacks from '@/components/tables/TablePacks';
