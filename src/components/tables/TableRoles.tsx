@@ -465,7 +465,7 @@ export default function TableRoles({ fdata, refetch, loading }: Props) {
               <Button size="sm" variant="outline" onClick={closeDeleteModal}>
                 Cancel
               </Button>
-              <Button size="sm" color="red" disabled={isDeleting} onClick={handleDeleteRole}>
+              <Button size="sm"  disabled={isDeleting} onClick={handleDeleteRole}>
                 {isDeleting ? "Deleting..." : "Delete"}
               </Button>
             </div>

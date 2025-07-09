@@ -466,7 +466,7 @@ export default function TableSkills({ fdata, refetch, loading }: Props) {
               <Button size="sm" variant="outline" onClick={closeDeleteModal}>
                 Cancel
               </Button>
-              <Button size="sm" color="red" disabled={isDeleting} onClick={handleDeleteSkill}>
+              <Button size="sm"  disabled={isDeleting} onClick={handleDeleteSkill}>
                 {isDeleting ? "Deleting..." : "Delete"}
               </Button>
             </div>
