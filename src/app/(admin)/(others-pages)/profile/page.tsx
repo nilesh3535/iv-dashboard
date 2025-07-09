@@ -8,8 +8,8 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "AI Interviewer - Admin Panel",
-  description: "This is AI Interviewer - Admin Panel",
+  title: "WinYourInterview - Admin Panel",
+  description: "This is WinYourInterview - Admin Panel",
 };
 
 export default function Profile() {

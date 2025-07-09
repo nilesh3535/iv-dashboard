@@ -84,21 +84,13 @@ const AppHeader: React.FC = () => {
           </button>
 
           <Link href="/" className="lg:hidden flex flex-row justify-center items-center gap-2">
-            <Image
-              width={40}
-              height={32}
-              className="dark:hidden"
-            src="/images/ai-avatar-512.png"
-              alt="Logo"
-            />
-            <Image
-              width={40}
-              height={32}
-              className="hidden dark:block"
-             src="/images/ai-avatar-512.png"
-              alt="Logo"
-            />
-            <h3 className=" dark:text-blue-300 text-blue-900 font-semibold">AI Interviewer</h3>
+             <Image
+                                         src="/wyi.png" // replace with your logo path
+                                         alt="Company Logo"
+                                         width={200}
+                                         height={100}
+                                         className="object-contain bg-gray-50 rounded-sm"
+                                       />
           </Link>
 
           <button

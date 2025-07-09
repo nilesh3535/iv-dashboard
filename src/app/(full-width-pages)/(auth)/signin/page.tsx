@@ -3,8 +3,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-  "AI  Interviewer - Admin Panel",
-description: "This is AI  Interviewer - Admin Panel",};
+  "WinYourInterview - Admin Panel",
+description: "This is WinYourInterview - Admin Panel",};
 
 export default function SignIn() {
   return <SignInForm />;

@@ -10,6 +10,7 @@ import {
   GridIcon,
   GroupIcon,
   HorizontaLDots,
+  ListIcon,
   ShootingStarIcon
 } from "../icons/index";
 import SidebarWidget from "./SidebarWidget";
@@ -42,6 +43,14 @@ const navItems: NavItem[] = [
     name: "Candidates",
     icon: <GroupIcon />,
     subItems: [{ name: "List", path: "/candidates", pro: false }],
+  },
+    {
+    name: "Role & Skills Manager",
+    icon: <ListIcon />,
+    subItems: [
+        { name: "Manage Roles", path: "/roles", pro: false },
+      { name: "Manage Skills", path: "/skills", pro: false },
+    ],
   },
   {
     name: "Orders",
@@ -295,21 +304,13 @@ const AppSidebar: React.FC = () => {
           {isExpanded || isHovered || isMobileOpen ? (
             <div className="flex flex-row items-center gap-2">
               <Image
-                width={30}
-                height={20}
-                className="dark:hidden bg-blue-950 rounded-md"
-              src="/images/ai-avatar-512.png"
-                alt="Logo"
+              src="/wyi.png" // replace with your logo path
+              alt="Company Logo"
+              width={170}
+              height={100}
+              className="object-contain bg-gray-50 rounded-sm"
               />
-              <Image
-                className="hidden dark:block bg-blue-950 rounded-md"
-                  src="/images/ai-avatar-512.png"
-                alt="Logo"
-                width={30}
-                height={20}
-              />
-        <h3 className=" dark:text-blue-300 text-blue-900 font-semibold">AI Interviewer</h3>
-            </div>
+                                                  </div>
           ) : (
             <Image
                src="/images/ai-avatar-512.png"

@@ -96,6 +96,18 @@ interface PacksQuery {
   name: string;
   flag: boolean;
 }
+interface Roles{
+  id:string;
+  role:string;
+  createdAt:string;
+  flag: boolean;
+}
+interface Skills {
+  id: string;
+  skill: string;
+  createdAt: string;
+  flag: boolean;
+}
 
 export async function getAllUsers(): Promise<User[]> {
   try {
@@ -234,6 +246,34 @@ export async function getAllPacks(): Promise<Packs[]> {
   return packs;
 }
 
+export async function getAllRoles(): Promise<Roles[]> {
+  const snapshot = await db.collection("roles")
+ .orderBy("createdAt", "desc")
+  .get();
+
+  if (snapshot.empty) return [];
+
+  const roles = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Roles[];
+
+  return roles;
+}
+export async function getAllSkills(): Promise<Skills[]> {
+  const snapshot = await db.collection("skills")
+ .orderBy("createdAt", "desc")
+  .get();
+
+  if (snapshot.empty) return [];
+
+  const skills = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as Skills[];
+
+  return skills;
+}
 export async function signinUser(params: SignInUser) {
   const { email, password } = params;
 
@@ -456,7 +496,269 @@ export async function AddNewPlan({
     return { success: false, error };
   }
 }
+// roles
+export async function AddNewRole({
+  role,
+  flag,
+}: {
+  role: string;
+  flag?: boolean;
+}) {
+  try {
+    const timestamp = new Date().toISOString();
+    await db.collection("roles").add({
+      role,
+      flag: flag ?? true, // default flag to true if not provided
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
 
+    return { success: true, message: "New role added successfully!" };
+  } catch (error) {
+    console.error("Error adding new Role:", error);
+    return { success: false, error };
+  }
+}
+
+export async function updateRoleDetails({
+  roleId,
+  role,
+  flag,
+}: {
+  roleId: string;
+  role: string;
+  flag?: boolean;
+}) {
+  try {
+    const timestamp = new Date().toISOString();
+    const roleRef = db.collection("roles").doc(roleId);
+
+    await roleRef.update({
+      role,
+      flag,
+      updatedAt: timestamp,
+    });
+
+    return { success: true, message: "Role details updated successfully!" };
+  } catch (error) {
+    console.error("Error updating Role details:", error);
+    return { success: false, error };
+  }
+}
+
+// Check if Role with the same flag exists (used for Add form)
+export async function checkRoleExists({
+  role,
+  flag,
+}: {
+  role: string;
+  flag?: boolean;
+}) {
+  try {
+    const snapshot = await db
+      .collection("roles")
+      .where("role", "==", role)
+      .where("flag", "==", flag)
+      .get();
+
+    if (snapshot.empty) {
+      return { success: false, message: "No role found" };
+    }
+
+    const data = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return {
+      success: true,
+      message: "Role(s) found",
+      data,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Failed to check roles. Please try again.",
+    };
+  }
+}
+
+// Check if Role with the same flag exists (excluding current ID) - used in Update form
+export async function checkRoleActive({
+  roleId,
+  role,
+  flag,
+}: {
+  roleId: string;
+  role: string;
+  flag?: boolean;
+}) {
+  try {
+    const snapshot = await db
+      .collection("roles")
+      .where("role", "==", role)
+      .where("flag", "==", flag)
+      .get();
+
+    if (snapshot.empty) {
+      return { success: false, message: "No role found" };
+    }
+
+    const otherRoles = snapshot.docs.filter(doc => doc.id !== roleId);
+
+    if (otherRoles.length === 0) {
+      return { success: false, message: "No role found" };
+    }
+
+    return {
+      success: true,
+      message: "Role(s) found",
+      data: otherRoles.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })),
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Failed to check roles. Please try again.",
+    };
+  }
+}
+// skills
+// skills
+export async function AddNewSkill({
+  skill,
+  flag,
+}: {
+  skill: string;
+  flag?: boolean;
+}) {
+  try {
+    const timestamp = new Date().toISOString();
+    await db.collection("skills").add({
+      skill,
+      flag: flag ?? true, // default flag to true if not provided
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
+
+    return { success: true, message: "New skill added successfully!" };
+  } catch (error) {
+    console.error("Error adding new Skill:", error);
+    return { success: false, error };
+  }
+}
+
+export async function updateSkillDetails({
+  skillId,
+  skill,
+  flag,
+}: {
+  skillId: string;
+  skill: string;
+  flag?: boolean;
+}) {
+  try {
+    const timestamp = new Date().toISOString();
+    const skillRef = db.collection("skills").doc(skillId);
+
+    await skillRef.update({
+      skill,
+      flag,
+      updatedAt: timestamp,
+    });
+
+    return { success: true, message: "Skill details updated successfully!" };
+  } catch (error) {
+    console.error("Error updating Skill details:", error);
+    return { success: false, error };
+  }
+}
+
+// Check if Skill with the same flag exists (used for Add form)
+export async function checkSkillExists({
+  skill,
+  flag,
+}: {
+  skill: string;
+  flag?: boolean;
+}) {
+  try {
+    const snapshot = await db
+      .collection("skills")
+      .where("skill", "==", skill)
+      .where("flag", "==", flag)
+      .get();
+
+    if (snapshot.empty) {
+      return { success: false, message: "No skill found" };
+    }
+
+    const data = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return {
+      success: true,
+      message: "Skill(s) found",
+      data,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Failed to check skills. Please try again.",
+    };
+  }
+}
+
+// Check if Skill with the same flag exists (excluding current ID) - used in Update form
+export async function checkSkillActive({
+  skillId,
+  skill,
+  flag,
+}: {
+  skillId: string;
+  skill: string;
+  flag?: boolean;
+}) {
+  try {
+    const snapshot = await db
+      .collection("skills")
+      .where("skill", "==", skill)
+      .where("flag", "==", flag)
+      .get();
+
+    if (snapshot.empty) {
+      return { success: false, message: "No skill found" };
+    }
+
+    const otherSkills = snapshot.docs.filter(doc => doc.id !== skillId);
+
+    if (otherSkills.length === 0) {
+      return { success: false, message: "No skill found" };
+    }
+
+    return {
+      success: true,
+      message: "Skill(s) found",
+      data: otherSkills.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })),
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Failed to check skills. Please try again.",
+    };
+  }
+}
 export async function updateAdminProfile({
        userId,
             companyName,
@@ -531,6 +833,25 @@ export async function updateAddress({
     return { success: true, message: "Information updated successfully!" };
   } catch (error) {
     console.error("Error updatingInformation details:", error);
+    return { success: false, error };
+  }
+}
+
+export async function deleteRole(roleId: string) {
+  try {
+    await db.collection("roles").doc(roleId).delete();
+    return { success: true, message: "Role deleted successfully!" };
+  } catch (error) {
+    console.error("Error deleting role:", error);
+    return { success: false, error };
+  }
+}
+export async function deleteSkill(skillId: string) {
+  try {
+    await db.collection("skills").doc(skillId).delete();
+    return { success: true, message: "Skill deleted successfully!" };
+  } catch (error) {
+    console.error("Error deleting skill:", error);
     return { success: false, error };
   }
 }

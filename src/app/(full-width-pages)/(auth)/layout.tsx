@@ -21,10 +21,14 @@ export default function AuthLayout({
               <GridShape />
               <div className="flex flex-col items-center max-w-xs">
               <div className="flex items-center gap-2">
-                    <Image src="/images/logo-3.png" alt="logo" width={84} height={39} />
-                    <span className="hidden sm:block text-blue-300 text-2xl sm:text-[38px] font-bold">
-                    Interviewer
-                    </span>
+                   <Image
+                             src="/wyi.png" // replace with your logo path
+                             alt="Company Logo"
+                             width={200}
+                             height={100}
+                             className="object-contain bg-gray-50 rounded-sm shadow-lg shadow-gray-700"
+                           />
+                   
                   </div>
               
               </div>
