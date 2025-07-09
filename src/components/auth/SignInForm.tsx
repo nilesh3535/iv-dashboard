@@ -111,7 +111,7 @@ if (isLoading || !animationData) {
                   <Label>
                     Email <span className="text-error-500">*</span>{" "}
                   </Label>
-                  <Input placeholder="info@gmail.com" type="email" name="email"  />
+                  <Input placeholder="Enter your username" type="email" name="email"  />
                 </div>
                 <div>
                   <Label>
