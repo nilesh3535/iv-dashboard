@@ -248,6 +248,8 @@ export default function TableSkills({ fdata, refetch, loading }: Props) {
     }
   };
 
+  
+
   return (
     <div>
       <div className="flex flex-row-reverse">

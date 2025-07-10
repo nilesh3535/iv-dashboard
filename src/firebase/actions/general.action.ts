@@ -248,7 +248,7 @@ export async function getAllPacks(): Promise<Packs[]> {
 
 export async function getAllRoles(): Promise<Roles[]> {
   const snapshot = await db.collection("roles")
- .orderBy("createdAt", "desc")
+ .orderBy("role", "asc")
   .get();
 
   if (snapshot.empty) return [];
@@ -262,7 +262,7 @@ export async function getAllRoles(): Promise<Roles[]> {
 }
 export async function getAllSkills(): Promise<Skills[]> {
   const snapshot = await db.collection("skills")
- .orderBy("createdAt", "desc")
+ .orderBy("skill", "asc")
   .get();
 
   if (snapshot.empty) return [];
@@ -497,28 +497,28 @@ export async function AddNewPlan({
   }
 }
 // roles
-export async function AddNewRole({
-  role,
-  flag,
-}: {
-  role: string;
-  flag?: boolean;
-}) {
-  try {
-    const timestamp = new Date().toISOString();
-    await db.collection("roles").add({
-      role,
-      flag: flag ?? true, // default flag to true if not provided
-      createdAt: timestamp,
-      updatedAt: timestamp,
-    });
+  export async function AddNewRole({
+    role,
+    flag,
+  }: {
+    role: string;
+    flag?: boolean;
+  }) {
+    try {
+      const timestamp = new Date().toISOString();
+      await db.collection("roles").add({
+        role,
+        flag: flag ?? true, // default flag to true if not provided
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      });
 
-    return { success: true, message: "New role added successfully!" };
-  } catch (error) {
-    console.error("Error adding new Role:", error);
-    return { success: false, error };
+      return { success: true, message: "New role added successfully!" };
+    } catch (error) {
+      console.error("Error adding new Role:", error);
+      return { success: false, error };
+    }
   }
-}
 
 export async function updateRoleDetails({
   roleId,
