@@ -88,7 +88,7 @@ const sanitizedData = filteredData.map((item): OrdersProps => ({
       title={"All Orders ("+data.length+")"}
       searchTerm={searchTerm}
       onSearchChange={setSearchTerm}
-      filterValue={filterValue}
+      filterValue={filterValue} 
       onFilterChange={setFilterValue}
       showDropdown={true}
       srcTxt={"Search order here..."}
