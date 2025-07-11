@@ -51,11 +51,11 @@ export default function RolesPage() {
 
   return (
     <div>
-      <PagePackBreadcrumb pageTitle="Roles" total={`(${data.length})`} />
+     
 
-      <div className="mt-6">
+      <div className="">
         <CommonTitleSearchCard
-          title={`All Roles (${filteredRoles.length})`} // Display count of filtered roles
+          title={`Roles (${filteredRoles.length})`} // Display count of filtered roles
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           srcTxt="Search Role here..."
