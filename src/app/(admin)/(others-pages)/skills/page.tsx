@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo } from 'react'; // Import useMemo
 
 import { getAllSkills } from '@/firebase/actions/general.action'; // Your Firebase action
-import PagePackBreadcrumb from '@/components/common/PagePackBreadCrumb';
+
 import TableSkills from '@/components/tables/TableSkills';
 import CommonTitleSearchCard from '@/components/common/CommonTitleSearchCard'; // Import your new component
 
