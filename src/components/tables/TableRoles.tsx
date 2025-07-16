@@ -11,6 +11,7 @@ import Label from "../form/Label";
 import { toast } from "sonner";
 import { PencilIcon, TrashBinIcon } from "@/icons";
 import CreatableSelect from "react-select/creatable";
+import { StylesConfig, GroupBase } from 'react-select';
 interface Role {
   id: string;
   role: string;
@@ -28,7 +29,7 @@ interface SelectOption {
   value: string;
   label: string;
 }
-interface Props {
+interface PageProps {
   fdata: Role[];
   total: string;
   refetch: () => void;
@@ -36,7 +37,7 @@ interface Props {
   skills: Skill[];
 }
 
-export default function TableRoles({ fdata,skills, refetch, loading }: Props) {
+export default function TableRoles({ fdata,skills, refetch, loading }: PageProps) {
   const [selectedSkills, setSelectedSkills] = useState<SelectOption[]>([]);
 const skillOptions: SelectOption[] = skills.map((s) => ({
   value: s.id,
@@ -305,8 +306,10 @@ const handleCreateSkill = async (inputValue: string) => {
     }
   };
 
-const getCustomSelectStyles = (hasError: boolean) => ({
-  control: (provided: any, state: any) => ({
+const getCustomSelectStyles = (
+  hasError: boolean
+): StylesConfig<SelectOption, true, GroupBase<SelectOption>> => ({
+  control: (provided, state) => ({
     ...provided,
     minHeight: '44px',
     borderRadius: '0.5rem',
@@ -317,11 +320,11 @@ const getCustomSelectStyles = (hasError: boolean) => ({
       borderColor: '#3b82f6',
     },
   }),
-  menu: (provided: any) => ({
+  menu: (provided) => ({
     ...provided,
     zIndex: 9999,
   }),
-  option: (provided: any, state: any) => ({
+  option: (provided, state) => ({
     ...provided,
     backgroundColor: state.isSelected
       ? '#3b82f6'
