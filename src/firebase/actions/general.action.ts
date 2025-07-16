@@ -101,6 +101,8 @@ interface Roles{
   role:string;
   createdAt:string;
   flag: boolean;
+   skillsetIds?: string[];
+  skillsetNames?: string[];
 }
 interface Skills {
   id: string;
@@ -497,37 +499,48 @@ export async function AddNewPlan({
   }
 }
 // roles
-  export async function AddNewRole({
-    role,
-    flag,
-  }: {
-    role: string;
-    flag?: boolean;
-  }) {
-    try {
-      const timestamp = new Date().toISOString();
-      await db.collection("roles").add({
-        role,
-        flag: flag ?? true, // default flag to true if not provided
-        createdAt: timestamp,
-        updatedAt: timestamp,
-      });
+export async function AddNewRole({
+  role,
+  flag,
+  skillsetIds,
+  skillsetNames,
+}: {
+  role: string;
+  flag?: boolean;
+  skillsetIds?: string[];
+  skillsetNames?: string[];
+}) {
+  try {
+    const timestamp = new Date().toISOString();
 
-      return { success: true, message: "New role added successfully!" };
-    } catch (error) {
-      console.error("Error adding new Role:", error);
-      return { success: false, error };
-    }
+    await db.collection("roles").add({
+     role,
+  flag: flag ?? true,
+  skillsetIds: skillsetIds ?? [],
+  skillsetNames: skillsetNames ?? [],
+  createdAt: timestamp,
+  updatedAt: timestamp,
+    });
+
+    return { success: true, message: "New role added successfully!" };
+  } catch (error) {
+    console.error("Error adding new Role:", error);
+    return { success: false, error };
   }
+}
 
 export async function updateRoleDetails({
   roleId,
   role,
   flag,
+  skillsetIds,
+  skillsetNames,
 }: {
-  roleId: string;
+ roleId: string;
   role: string;
   flag?: boolean;
+  skillsetIds?: string[];
+  skillsetNames?: string[];
 }) {
   try {
     const timestamp = new Date().toISOString();
@@ -535,7 +548,9 @@ export async function updateRoleDetails({
 
     await roleRef.update({
       role,
-      flag,
+      flag: flag ?? true,
+      skillsetIds: skillsetIds ?? [],
+      skillsetNames: skillsetNames ?? [],
       updatedAt: timestamp,
     });
 
@@ -638,14 +653,18 @@ export async function AddNewSkill({
 }) {
   try {
     const timestamp = new Date().toISOString();
-    await db.collection("skills").add({
+    const docRef = await db.collection("skills").add({
       skill,
-      flag: flag ?? true, // default flag to true if not provided
+      flag: flag ?? true,
       createdAt: timestamp,
       updatedAt: timestamp,
     });
 
-    return { success: true, message: "New skill added successfully!" };
+    return {
+      success: true,
+      message: "New skill added successfully!",
+      id: docRef.id, // return the new skill ID
+    };
   } catch (error) {
     console.error("Error adding new Skill:", error);
     return { success: false, error };

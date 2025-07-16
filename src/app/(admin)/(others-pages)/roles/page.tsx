@@ -1,31 +1,37 @@
 'use client';
-import { useEffect, useState, useMemo } from 'react'; // Keep useMemo for search if you want it, otherwise remove it
+import { useEffect, useState, useMemo } from 'react';
 
-import { getAllRoles } from '@/firebase/actions/general.action';
+import { getAllRoles, getAllSkills } from '@/firebase/actions/general.action';
 import TableRoles from '@/components/tables/TableRoles';
-import CommonTitleSearchCard from '@/components/common/CommonTitleSearchCard'; // Still needed for search functionality
+import CommonTitleSearchCard from '@/components/common/CommonTitleSearchCard';
 
 interface Role {
   id: string;
   role: string;
   createdAt: string;
   flag: boolean;
+  skillsetIds?: string[];
+  skillsetNames?: string[];
+}
+
+interface Skill {
+  id: string;
+  skill: string;
+  createdAt: string;
+  flag: boolean;
 }
 
 export default function RolesPage() {
   const [data, setData] = useState<Role[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(''); // State for the search term
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchRoles = async () => {
     setLoading(true);
     try {
       const allRoles = await getAllRoles();
-      if (allRoles) {
-        setData(allRoles);
-      } else {
-        setData([]);
-      }
+      setData(allRoles ?? []);
     } catch (error) {
       console.error('Error fetching roles:', error);
       setData([]);
@@ -34,15 +40,23 @@ export default function RolesPage() {
     }
   };
 
+  const fetchSkills = async () => {
+    try {
+      const allSkills = await getAllSkills();
+      setSkills(allSkills ?? []);
+    } catch (error) {
+      console.error('Error fetching skills:', error);
+      setSkills([]);
+    }
+  };
+
   useEffect(() => {
     fetchRoles();
+    fetchSkills();
   }, []);
 
-  // Filter the data based on the search term
   const filteredRoles = useMemo(() => {
-    if (!searchTerm) {
-      return data;
-    }
+    if (!searchTerm) return data;
     return data.filter((roleItem) =>
       roleItem.role.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -50,25 +64,19 @@ export default function RolesPage() {
 
   return (
     <div>
-     
-
       <div className="">
         <CommonTitleSearchCard
-          title={`Roles (${filteredRoles.length})`} // Display count of filtered roles
+          title={`Roles (${filteredRoles.length})`}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
           srcTxt="Search Role here..."
-          // showAddButton is implicitly false if not provided, or you can explicitly set it:
-          // showAddButton={false}
-          // addBtnText and onAddClick are also not needed here.
         >
-          {/* TableRoles will receive the filtered data */}
           <TableRoles
-            // No ref needed here as we aren't calling methods from CommonTitleSearchCard
-            fdata={filteredRoles} // Pass the filtered data
-            total={`(${filteredRoles.length})`} // Update total to reflect filtered count
+            fdata={filteredRoles}
+            total={`(${filteredRoles.length})`}
             refetch={fetchRoles}
-            loading={loading} // Pass loading directly from the page state
+            loading={loading}
+            skills={skills} // 🔥 Now passing all skills here
           />
         </CommonTitleSearchCard>
       </div>

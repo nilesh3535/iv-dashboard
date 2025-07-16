@@ -273,9 +273,7 @@ export default function TableSkills({ fdata, refetch, loading }: Props) {
                   <TableCell isHeader className="px-5 py-3 text-start text-theme-xs text-gray-500 dark:text-gray-400 font-medium">
                     Created
                   </TableCell>
-                  <TableCell isHeader className="px-5 py-3 text-start text-theme-xs text-gray-500 dark:text-gray-400 font-medium">
-                    Flag
-                  </TableCell>
+              
                   <TableCell isHeader className="px-5 py-3 text-start text-theme-xs text-gray-500 dark:text-gray-400 font-medium">
                     Actions
                   </TableCell>
@@ -314,11 +312,7 @@ export default function TableSkills({ fdata, refetch, loading }: Props) {
                           </p>
                         </div>
                       </TableCell>
-                      <TableCell className="px-5 py-4 ">
-                        <div className={`${data.flag ? "text-green-500" : "text-red-500"}`}>
-                          {data.flag ? "Active" : "Inactive"}
-                        </div>
-                      </TableCell>
+                    
                       <TableCell className="px-5 py-4 flex gap-2">
                         <button
                           onClick={() => {
@@ -371,19 +365,7 @@ export default function TableSkills({ fdata, refetch, loading }: Props) {
                       className="h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
-                  <div>
-                    <Label>Flag</Label>
-                    <div className="flex w-full flex-row justify-center p-2 gap-3">
-                      <p className="text-sm font-medium text-gray-700 dark:text-gray-400">Inactive</p>
-                      <Switch
-                        label=""
-                        defaultChecked={flag}
-                        onChange={setFlag}
-                        color={flag ? "green" : "green"}
-                      />
-                      <p className={`text-sm font-medium ${flag ? "text-green-700 dark:text-green-400" : "text-gray-700 dark:text-gray-400"}`}>Active</p>
-                    </div>
-                  </div>
+                 
                 </div>
               </div>
               <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
@@ -425,19 +407,7 @@ export default function TableSkills({ fdata, refetch, loading }: Props) {
                       className="h-11 w-full rounded-lg border bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:border-brand-300 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
-                  <div>
-                    <Label>Flag</Label>
-                    <div className="flex w-full flex-row justify-center p-2 gap-3">
-                      <p className="text-sm font-medium text-gray-700 dark:text-gray-400">Inactive</p>
-                      <Switch
-                        label=""
-                        defaultChecked={flag}
-                        onChange={setFlag}
-                        color={flag ? "green" : "green"}
-                      />
-                      <p className={`text-sm font-medium ${flag ? "text-green-700 dark:text-green-400" : "text-gray-700 dark:text-gray-400"}`}>Active</p>
-                    </div>
-                  </div>
+               
                 </div>
               </div>
               <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
