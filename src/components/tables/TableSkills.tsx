@@ -5,7 +5,6 @@ import Pagination from "./Pagination";
 import { AddNewSkill, checkSkillActive, checkSkillExists, updateSkillDetails, deleteSkill } from "../../firebase/actions/general.action"; // Import deleteSkill
 
 import moment from "moment";
-import Switch from "../form/switch/Switch";
 import Button from "../ui/button/Button";
 import { LoaderIcon } from "lucide-react";
 import { Modal } from "../ui/modal";

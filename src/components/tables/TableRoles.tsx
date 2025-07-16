@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
 import Pagination from "./Pagination";
 import { AddNewRole, updateRoleDetails, checkRoleExists, checkRoleActive, deleteRole, AddNewSkill } from "../../firebase/actions/general.action"; // Import deleteRole
-import moment from "moment";
-import Switch from "../form/switch/Switch";
+
 import Button from "../ui/button/Button";
 import { LoaderIcon } from "lucide-react"; // Only LoaderIcon is used from lucide-react now
 import { Modal } from "../ui/modal";
